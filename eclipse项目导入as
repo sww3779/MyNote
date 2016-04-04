@@ -1,0 +1,33 @@
+>接手到项目是eclipse开发的，本想换回androidStudio，导入之后发现好多问题。迫于项目追赶，到新公司又是独立开发，出了问题无人可问，就用eclipse开发了几个月。昨天上线的项目算是正式要往外推了，忙里偷闲，手痒痒的又打开as捣鼓了一天，终于搞好了。
+ >各种问题各种解决，总算搞定了。特此分享心得，虽说网上各种问题的回答一箩筐，可真正适合自己的才是最好的嘛，嘎嘎。。。
+
+###下边正式开始喽
+####1、首先我觉得导入项目的时候，import module比较好，因为我直接导入project报的错太多了。
+ > 1.1如果是导入project,一定要在gradle-wrapper把gradle版本改成自己有的，build.gradle也要改，不过我改完了这个，后续问题还是很多就放弃导project了，啰里吧嗦说了些废话哈，嘿嘿，我在写日记啦
+> 1.2导入module。我是用这种方搞成功的啦。
+
+####2、遇到的问题
+>2.1大部分的png格式图片不合格。libpng warning: iCCP: Not recognizing known sRGB profile that has been edited
+就是这个恶心的提示，老是编译不过去，网上回答各式各样，本人觉得下边这篇文章是写的最好的，可以好好看看
+http://my.oschina.net/1pei/blog/479162?fromerr=S4HNJ7eF
+不过文章好归好，可是作者建议用Image Magick工具，又是一个我未知的领域啊，想方设法搞了半天未果。。。
+遂换思路，偶然发现了两行可以让as不检查png图片的代码
+ aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
+对，就是它，写在android{}块里就好了。
+
+>2.2第二个问题是.9图不合格，这个嘛，自己用sdk下工具搞一些就好了，本人还没有学会用studio自带的编辑工具，又回到sdk目录下找的draw9patch工具，呜呜。。。
+>2.3jar包重复，在eclipse里好好的，来到studio怎么就重复了呢，原因是我是导入的module,project下默认有一个叫做app的module,一看是jar包重复，遂果断把app删掉，要他何用，哈哈。。。就这样解决了。
+mutiple就是这个单词，看到它就要想到是不是什么东西重复了，我真是太机智了，吼吼。。。
+>2.4编译是过了，一运行，崩了，心凉了一截，可是万里长征走这么远了，岂能放弃，找。。。
+发现错误是jni相关的什么东东，想起来studio的so文件要重新放一下目录的,遂建了jniLibs，把所以.so文件丢了进去，运行，又崩了，明明以前就是这么干的嘛，算了，换方法
+百度了一番
+sourceSets {
+        main {
+ jniLibs.srcDirs=['libs']
+        }
+丢进去了这句代码，好了，大功告成！！！eclipse的项目放到studio后，目录结构还是有不少差异的，也不知道会不会出别的问题了呢
+
+总而言之，小女子又解决了一个大问题，吼吼。。。
